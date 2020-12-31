@@ -1,0 +1,45 @@
+import 'package:grosery_shop/models/cart.dart';
+import 'package:grosery_shop/models/products.dart';
+import 'package:grosery_shop/screens/pdt_detail_screen.dart';
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../models/products.dart';
+import '../models/cart.dart';
+
+class PdtItem extends StatelessWidget {
+  final String name;
+  final String imageUrl;
+
+  PdtItem({
+    this.imageUrl,
+    this.name
+  });
+  @override
+  Widget build(BuildContext context) {
+    final pdt=Provider.of<Product>(context);
+    final cart=Provider.of<Cart>(context);
+
+    return GestureDetector(
+      onTap: (){
+        Navigator.of(context).pushNamed(DetailPage.routeName, arguments: pdt.id);
+      },
+          child: Padding(
+        padding: const EdgeInsets.all(15.0),
+        child: GridTile(
+          child: Image.network(imageUrl),
+          footer: GridTileBar(
+            title: Text(name),
+            trailing: IconButton(icon: Icon(Icons.shopping_cart), onPressed: (){
+              Scaffold.of(context).showSnackBar(SnackBar(
+                duration: Duration(seconds: 2),
+                content: Text('Added to Cart'),
+              ));
+              cart.addItem(pdt.id, pdt.name, pdt.price);
+            },),
+            backgroundColor: Colors.black87,
+          ),
+        ),
+      ),
+    );
+  }
+}
